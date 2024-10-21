@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Lottery </title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #828181; /* Light background for contrast */
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center them horizontally */
+            position: relative; /* Positioning context for absolute positioning */
+            gap: -10px; /* Adjusts overlap between shapes (negative value to overlap) */
+        }
+        .balll {
+            display: block;
+            width: 270px;
+            height: 270px;
+            position: relative;
+            background: 
+                radial-gradient(circle at 50% 50%, #f0f0f0 30%, #e1e1e1 100%); /* Adds depth with radial gradient */
+            border-radius: 50%;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),   /* External shadow for depth */
+                inset -25px -25px 40px rgba(0, 0, 0, 0.5), /* Inner shadow for dimension */
+                inset 0 0 10px rgba(255, 255, 255, 0.6); /* Inner highlight for gloss */
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* Adding a light reflection effect */
+        .balll::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%; /* Adjust size for the reflection */
+            height: 40%; /* Adjust height for the reflection */
+            background: rgba(255, 255, 255, 0.3); /* Soft white reflection */
+            border-radius: 50%; /* Match the ball's shape */
+            filter: blur(10px); /* Softens the reflection */
+            z-index: 1; /* Ensure it stays on top */
+        }
+        
+        
+        .ball {
+            width: 30px;
+            height: 30px;
+            background-image: radial-gradient(#d9d8d8, #bbbaba 30%, transparent 30%, transparent),
+		radial-gradient(
+			ellipse at top 20% left 30%,
+			white,
+			#4141d9d3 2%,
+			#0d0043dc 65%,
+			#140d77
+		);
+	background-blend-mode: screen;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.5);
+            position:relative;
+            transform: translateZ(0);
+            transition: transform 0.3s, background-color 0.3s; /* Smooth transition */
+        }
+
+       
+        .balls {
+            width: 80%;
+            height: 5%;
+            background-color: transparent;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1px;
+            position: relative;
+        }
+        
+        .ball {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            box-shadow: 10px 10px 30px -10px #0008, -40px -40px 100px -30px #fff2;
+            background-image: radial-gradient(#ccc, #888 30%, transparent 30%, transparent),
+            radial-gradient(
+                ellipse at top 20% left 30%,
+                white,
+                #cdcdcd 5%,
+                #040468 65%,
+                #666
+            );
+            background-blend-mode: screen;
+            font-size: 10px;
+            font-weight: bold;
+            transform: translateZ(0);
+        }
+        
+        /* Create a back and front effect */
+        .ball:nth-child(odd) {
+            margin-bottom: 10px; /* Move some balls in front */
+            z-index: 2; /* Higher z-index to appear in front */
+        }
+        
+        .ball:nth-child(even) {
+            margin-bottom: 2px; /* Keep some balls behind */
+            z-index: 0; /* Lower z-index to appear behind */
+        }
+        
+        
+        
+        
+
+        .fan-blades {
+            width: 220px;
+            height: 220px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: center center;
+            z-index: 1;
+            transition: transform 0.5s ease; /* Smooth transition */
+        }
+
+        .fan-blades .blade {
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            perspective: 500px;
+            transform-style: preserve-3d;
+        }
+
+        .fan-blades .blade:nth-child(2) {
+            transform: translateX(-50%) rotate(90deg);
+        }
+
+        .fan-blades .blade:nth-child(3) {
+            transform: translateX(-50%) rotate(180deg);
+        }
+
+        .fan-blades .blade:nth-child(4) {
+            transform: translateX(-50%) rotate(270deg);
+        }
+
+        .fan-blades .blade span {
+            width: 100%;
+            height: 185%;
+            border-radius: 44px;
+            background: rgb(221, 219, 220);
+            background: linear-gradient(90deg, rgb(235, 234, 234) 0%, rgba(132, 132, 132, 1) 100%);
+            position: absolute;
+            top: -66px;
+            display: block;
+            transform-style: preserve-3d;
+            transform: rotateX(78deg);
+            overflow: hidden;
+            opacity: 0.9; /* Slightly transparent blades */
+        }
+
+        .fan-blades .center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            background: rgb(221, 219, 220);
+            background: linear-gradient(90deg, rgba(221, 219, 220, 1) 0%, rgba(181, 181, 182, 1) 100%);
+            z-index: 2;
+        }
+
+        /* Spin Animation */
+        .spin {
+            animation: rotate 1s linear infinite; /* Adjust the duration as needed */
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Ball Animation */
+        @keyframes ball-move {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(50px, -30px);
+            }
+            50% {
+                transform: translate(-30px, 50px);
+            }
+            75% {
+                transform: translate(-50px, -30px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .balll {
+                width: 90%; /* Responsive width */
+                height: auto;
+            }
+            .ball {
+                width: 20px; /* Smaller balls on mobile */
+                height: 20px;
+            }
+        }
+        .selected-balls {
+            display: none;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .selected-ball {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #bdc3c7, #7f8c8d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    <button id="spinButton" aria-label="Spin the fan">click </button> <!-- Added button -->
+    <br>
+    <div class="container">
+    <div class="balll"> 
+        <div class="balls" id="balls"></div>
+        <div class="fan-blades" id="fanBlades">
+            <span class="center"></span>
+            <div class="blade"><span></span></div>
+            <div class="blade"><span></span></div>
+            <div class="blade"><span></span></div>
+            <div class="blade"><span></span></div>
+        </div>
+    </div>
+    
+</div>
+    <br>
+    <div class="selected-balls" id="selectedBalls">
+        <div class="selected-ball" id="selectedBall1"></div>
+        <div class="selected-ball" id="selectedBall2"></div>
+        <div class="selected-ball" id="selectedBall3"></div>
+        <div class="selected-ball" id="selectedBall4"></div>
+        <div class="selected-ball" id="selectedBall5"></div>
+        <div class="selected-ball" id="selectedBall6"></div>
+        <div class="selected-ball" id="selectedBall7"></div>
+        <div class="selected-ball" id="selectedBall8"></div>
+        <div class="selected-ball" id="selectedBall9"></div>
+    </div>
+    <script>
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const ballContainer = document.getElementById("balls");
+            const numberOfBalls = 25;
+            const spinButton = document.getElementById("spinButton");
+            const fanBlades = document.getElementById('fanBlades');
+            const balls = document.querySelectorAll('.ball');
+            let isSpinning = false;
+        
+            // Create balls dynamically
+            for (let i = 1; i <= numberOfBalls; i++) {
+                const ball = document.createElement("div");
+                ball.classList.add("ball");
+                ball.textContent = i;
+                ballContainer.appendChild(ball);
+                
+            }
+        
+            // Function to start spinning the fan and moving balls
+            function startSpin() {
+                fanBlades.classList.add('spin');  // Spin the fan
+                isSpinning = true;
+                moveBalls();  // Start moving balls
+        
+                // Stop after 5 seconds
+                setTimeout(() => {
+                    stopSpin();
+                }, 5000);
+            }
+        
+            // Function to stop spinning the fan and stop moving balls
+            function stopSpin() {
+                fanBlades.classList.remove('spin');  // Stop fan spin
+                isSpinning = false;
+                stopBalls();  // Stop moving balls
+                displaySelectedBalls(selectBalls());  // Show selected balls
+            }
+        
+            // Move the balls in a circular path with a bouncing effect
+            function moveBalls() {
+                const balls = document.querySelectorAll('.ball');
+                balls.forEach((ball, index) => {
+                    let angle = (index / 5) * 2 * Math.PI;  // Initial angle for circular motion
+                    let angleIncrement = Math.random() * 0.05 + 0.03;  // Random speed
+        
+                    const moveBall = () => {
+                        if (isSpinning) {
+                            angle += angleIncrement;
+                            updateBallPosition(ball, angle);
+                            requestAnimationFrame(moveBall);
+                        }
+                    };
+        
+                    moveBall();
+                });
+            }
+        
+            // Set ball position based on angle
+            function updateBallPosition(ball, angle) {
+                const radius = 10;  // Circular path radius
+                const centerX = ball.parentElement.clientWidth / 2;
+                const centerY = ball.parentElement.clientHeight / 2;
+        
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                ball.style.left = `${x - ball.clientWidth / 2}px`;  // Adjust for ball center
+                ball.style.top = `${y - ball.clientHeight / 2}px`;
+        
+                // Apply bouncing effect
+                const bounceHeight = Math.sin(angle * 2) * 50;  // Adjust bounce effect
+                ball.style.transform = `translateY(${bounceHeight}px)`;
+            }
+        
+            // Function to stop all ball movement
+            function stopBalls() {
+                const balls = document.querySelectorAll('.ball');
+                balls.forEach(ball => {
+                    ball.style.transform = ''; 
+
+                    ball.style.left = '';  // Clear any inline styles
+                    ball.style.top = '';   // Clear any inline styles
+                });
+            }
+        
+            
+        
+            // Function to select 9 random balls
+            function selectBalls() {
+                const selectedIndices = new Set();
+                while (selectedIndices.size < 9) {
+                    selectedIndices.add(Math.floor(Math.random() * numberOfBalls));
+                }
+                return [...selectedIndices];
+            }
+
+            // Function to display selected balls one at a time
+            function displaySelectedBalls(selectedIndices) {
+                const selectedBallsDiv = document.getElementById('selectedBalls');
+                const selectedBalls = selectedBallsDiv.querySelectorAll('.selected-ball');
+                selectedBallsDiv.style.display = 'flex'; // Show selected balls
+                selectedBalls.forEach((ball, index) => {
+                    ball.style.display = 'none'; // Hide all initially
+                    setTimeout(() => {
+                        ball.style.display = 'flex'; // Show selected ball
+                        ball.textContent = selectedIndices[index] + 1; // Set ball number
+                    }, index * 500); // 500 ms delay for each
+                });
+            }
+        
+            // Event listener for the spin button
+            spinButton.addEventListener('click', () => {
+                if (!isSpinning) {
+                    startSpin();
+                }
+            });
+        
+            // Add keyboard accessibility for spin button
+            spinButton.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    spinButton.click();  // Trigger click on "Enter"
+                }
+            });
+        });
+        
+        
+    </script>
+</body>
+</html>
